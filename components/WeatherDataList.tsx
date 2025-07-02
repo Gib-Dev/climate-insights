@@ -161,47 +161,53 @@ export default function WeatherDataList() {
   };
 
   return (
-    <div style={{ maxWidth: 600, margin: "2rem auto", padding: 24, border: "1px solid #eee", borderRadius: 8 }}>
+    <div style={{ maxWidth: 600, margin: "2rem auto", padding: 24, border: "1px solid #eee", borderRadius: 8 }} className="weather-data-card">
       <h2>Weather Data</h2>
-      <form onSubmit={handleSubmit} style={{ marginBottom: 24, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-        <select
-          value={provinceId}
-          onChange={e => setProvinceId(Number(e.target.value))}
-          required
-          style={{ width: 120, padding: 8 }}
-        >
-          <option value="">Province</option>
-          {provinces.map(p => (
-            <option key={p.id} value={p.id}>{p.name}</option>
-          ))}
-        </select>
-        <input
-          type="date"
-          value={date}
-          onChange={e => setDate(e.target.value)}
-          required
-          style={{ width: 130, padding: 8 }}
-        />
-        <input
-          type="number"
-          placeholder="Temperature (°C)"
-          value={temperature}
-          onChange={e => setTemperature(e.target.value)}
-          required
-          style={{ width: 140, padding: 8 }}
-        />
-        <input
-          type="number"
-          placeholder="Precipitation (mm)"
-          value={precipitation}
-          onChange={e => setPrecipitation(e.target.value)}
-          required
-          style={{ width: 140, padding: 8 }}
-        />
-        <button type="submit" disabled={loading} style={{ padding: 8 }}>
-          {loading ? "Saving..." : "Add Data"}
-        </button>
-      </form>
+      {user ? (
+        <form onSubmit={handleSubmit} style={{ marginBottom: 24, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          <select
+            value={provinceId}
+            onChange={e => setProvinceId(Number(e.target.value))}
+            required
+            style={{ width: 120, padding: 8 }}
+          >
+            <option value="">Province</option>
+            {provinces.map(p => (
+              <option key={p.id} value={p.id}>{p.name}</option>
+            ))}
+          </select>
+          <input
+            type="date"
+            value={date}
+            onChange={e => setDate(e.target.value)}
+            required
+            style={{ width: 130, padding: 8 }}
+          />
+          <input
+            type="number"
+            placeholder="Temperature (°C)"
+            value={temperature}
+            onChange={e => setTemperature(e.target.value)}
+            required
+            style={{ width: 140, padding: 8 }}
+          />
+          <input
+            type="number"
+            placeholder="Precipitation (mm)"
+            value={precipitation}
+            onChange={e => setPrecipitation(e.target.value)}
+            required
+            style={{ width: 140, padding: 8 }}
+          />
+          <button type="submit" disabled={loading} style={{ padding: 8 }}>
+            {loading ? "Saving..." : "Add Data"}
+          </button>
+        </form>
+      ) : (
+        <div style={{ marginBottom: 24, color: 'var(--primary)', fontWeight: 600 }}>
+          Please <a href="/dashboard" style={{ color: 'var(--secondary)', textDecoration: 'underline' }}>log in</a> to add or edit weather data.
+        </div>
+      )}
       {error && <div style={{ color: "red", marginBottom: 12 }}>{error}</div>}
       <h3>List</h3>
       {loading && weather.length === 0 ? (
@@ -211,7 +217,7 @@ export default function WeatherDataList() {
       ) : (
         <ul style={{ padding: 0, listStyle: 'none' }}>
           {weather.map(entry => (
-            <li key={entry.id} style={{ marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <li key={entry.id} className="weather-list-item" style={{ marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
               {editingId === entry.id ? (
                 <form onSubmit={handleEdit} style={{ display: "inline" }}>
                   <select
@@ -310,6 +316,16 @@ export default function WeatherDataList() {
           background: #fff;
           color: var(--hover);
           border: 1px solid var(--hover);
+        }
+        @media (max-width: 600px) {
+          .weather-data-card {
+            padding: 14px !important;
+          }
+          .weather-list-item {
+            display: block !important;
+            margin-bottom: 20px !important;
+            font-size: 16px !important;
+          }
         }
       `}</style>
     </div>

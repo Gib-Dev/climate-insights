@@ -124,27 +124,33 @@ export default function ProvinceList() {
   return (
     <div style={{ maxWidth: 500, margin: "2rem auto", padding: 24, border: "1px solid #eee", borderRadius: 8 }}>
       <h2>Provinces</h2>
-      <form onSubmit={handleSubmit} style={{ marginBottom: 24 }}>
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={e => setName(e.target.value)}
-          required
-          style={{ width: "48%", marginRight: 8, padding: 8 }}
-        />
-        <input
-          type="text"
-          placeholder="Code"
-          value={code}
-          onChange={e => setCode(e.target.value)}
-          required
-          style={{ width: "30%", marginRight: 8, padding: 8 }}
-        />
-        <button type="submit" disabled={loading} style={{ padding: 8 }}>
-          {loading ? "Saving..." : "Add Province"}
-        </button>
-      </form>
+      {user ? (
+        <form onSubmit={handleSubmit} style={{ marginBottom: 24 }}>
+          <input
+            type="text"
+            placeholder="Name"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            required
+            style={{ width: "48%", marginRight: 8, padding: 8 }}
+          />
+          <input
+            type="text"
+            placeholder="Code"
+            value={code}
+            onChange={e => setCode(e.target.value)}
+            required
+            style={{ width: "30%", marginRight: 8, padding: 8 }}
+          />
+          <button type="submit" disabled={loading} style={{ padding: 8 }}>
+            {loading ? "Saving..." : "Add Province"}
+          </button>
+        </form>
+      ) : (
+        <div style={{ marginBottom: 24, color: 'var(--primary)', fontWeight: 600 }}>
+          Please <a href="/dashboard" style={{ color: 'var(--secondary)', textDecoration: 'underline' }}>log in</a> to add or edit provinces.
+        </div>
+      )}
       {error && <div style={{ color: "red", marginBottom: 12 }}>{error}</div>}
       <h3>List</h3>
       {loading && provinces.length === 0 ? (
