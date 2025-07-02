@@ -31,9 +31,9 @@ export default function NavBar() {
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 24 }}>
         <Cloud size={28} color="#fff" style={{ marginRight: 8 }} />
-        <span style={{ fontWeight: 800, fontSize: 22, color: '#fff', letterSpacing: 1 }}>
+        <Link href="/" style={{ fontWeight: 800, fontSize: 22, color: '#fff', letterSpacing: 1, textDecoration: 'none' }}>
           Climate Insights
-        </span>
+        </Link>
       </div>
       {/* Desktop Nav Links */}
       <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 32, marginRight: 24 }}>

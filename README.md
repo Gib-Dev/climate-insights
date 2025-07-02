@@ -7,19 +7,18 @@ A professional, portfolio-ready full-stack Next.js application for Canadian clim
 - Supabase PostgreSQL database
 - Prisma ORM (type-safe, migrations)
 - Authentication (Supabase Auth)
-- Full CRUD for Provinces and Weather Data (API + UI)
+- CRUD for Provinces and Weather Data (API + UI)
 - Dedicated pages: Home, Provinces, Weather, Dashboard
 - Modern, minimal blue color system
 - Lucide React icons for navigation and actions
-- Professional NavBar and Footer
 - Responsive, accessible, and clean design
 - Data visualization with Recharts
 - **Interactive Canada map** with province highlights and tooltips
 - Robust error handling and Zod validation
-- Professional code structure and tooling (ESLint, Prettier, Husky)
+- Code structure and tooling (ESLint, Prettier, Husky)
 
 ## Screenshots
-![Dashboard UI](./public/screenshot.png)
+![Dashboard UI](./public/climate-screenshot.png)
 
 ## Getting Started
 

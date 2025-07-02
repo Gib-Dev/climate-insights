@@ -2,6 +2,7 @@ import './globals.css';
 import { ReactNode } from 'react';
 import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
+import Link from 'next/link';
 
 export const metadata = {
   title: 'Climate Insights',
