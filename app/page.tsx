@@ -1,8 +1,6 @@
-import ProvinceList from '../components/ProvinceList';
-import WeatherDataList from '../components/WeatherDataList';
+import Link from "next/link";
 import ClimateChart from '../components/ClimateChart';
-import AuthForm from '../components/AuthForm';
-import UserList from '../components/UserList';
+import { Map, CloudSun, LayoutDashboard } from "lucide-react";
 
 // Vibrant climate palette
 const COLORS = {
@@ -20,33 +18,66 @@ export default function Home() {
   return (
     <main style={{ width: '100%' }}>
       {/* Hero Section */}
-      <section style={{ margin: '24px 0', textAlign: 'center' }}>
-        <h1 style={{ fontSize: 32, fontWeight: 800, color: 'var(--primary)', marginBottom: 8 }}>Climate Insights</h1>
-        <p style={{ fontSize: 18, color: 'var(--text)', margin: '0 auto', maxWidth: 600 }}>
-          A clean, professional dashboard for Canadian meteorological data.<br />
-          <span style={{ color: 'var(--secondary)', fontWeight: 600 }}>Sign up or sign in to manage provinces and weather data.</span>
+      <section style={{ margin: '32px 0 24px 0', textAlign: 'center' }}>
+        <h1 style={{ fontSize: 36, fontWeight: 900, color: 'var(--primary)', marginBottom: 10 }}>
+          Climate Insights
+        </h1>
+        <p style={{ fontSize: 20, color: 'var(--text)', margin: '0 auto 18px', maxWidth: 600 }}>
+          Explore Canada's climate data with a modern, interactive dashboard.
         </p>
+        <Link href="/provinces">
+          <button style={{ background: 'var(--secondary)', color: '#fff', fontWeight: 700, fontSize: 18, padding: '12px 32px', borderRadius: 8, border: 'none', cursor: 'pointer', transition: 'background 0.2s', marginTop: 8 }}>
+            Get Started
+          </button>
+        </Link>
       </section>
 
-      {/* Chart Section */}
-      <section className="card" style={{ margin: '24px 0' }}>
+      {/* Climate Chart Section */}
+      <section className="card" style={{ margin: '32px 0' }}>
         <ClimateChart />
       </section>
 
-      {/* Provinces Section */}
-      <section className="card" style={{ margin: '24px 0' }}>
-        <ProvinceList />
-      </section>
-
-      {/* Weather Data Section */}
-      <section className="card" style={{ margin: '24px 0' }}>
-        <WeatherDataList />
-      </section>
-
-      {/* Dashboard Section */}
-      <section className="card" style={{ margin: '24px 0' }}>
-        <AuthForm />
-        <UserList />
+      {/* Section Previews */}
+      <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 32, margin: '32px 0' }}>
+        {/* Provinces Preview */}
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 24 }}>
+          <Map size={36} color="var(--primary)" style={{ marginBottom: 10 }} />
+          <h3 style={{ color: 'var(--primary)', fontSize: 22, fontWeight: 700, margin: '8px 0' }}>Provinces</h3>
+          <p style={{ color: 'var(--text)', fontSize: 16, marginBottom: 16, textAlign: 'center' }}>
+            Manage Canadian provinces and their codes. Add, edit, or remove provinces as needed.
+          </p>
+          <Link href="/provinces">
+            <button style={{ background: 'var(--primary)', color: '#fff', fontWeight: 600, fontSize: 16, padding: '8px 22px', borderRadius: 6, border: 'none', cursor: 'pointer', transition: 'background 0.2s' }}>
+              View Provinces
+            </button>
+          </Link>
+        </div>
+        {/* Weather Data Preview */}
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 24 }}>
+          <CloudSun size={36} color="var(--primary)" style={{ marginBottom: 10 }} />
+          <h3 style={{ color: 'var(--primary)', fontSize: 22, fontWeight: 700, margin: '8px 0' }}>Weather Data</h3>
+          <p style={{ color: 'var(--text)', fontSize: 16, marginBottom: 16, textAlign: 'center' }}>
+            Add and view temperature and precipitation records for each province.
+          </p>
+          <Link href="/weather">
+            <button style={{ background: 'var(--primary)', color: '#fff', fontWeight: 600, fontSize: 16, padding: '8px 22px', borderRadius: 6, border: 'none', cursor: 'pointer', transition: 'background 0.2s' }}>
+              View Weather Data
+            </button>
+          </Link>
+        </div>
+        {/* Dashboard Preview */}
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 24 }}>
+          <LayoutDashboard size={36} color="var(--primary)" style={{ marginBottom: 10 }} />
+          <h3 style={{ color: 'var(--primary)', fontSize: 22, fontWeight: 700, margin: '8px 0' }}>Dashboard</h3>
+          <p style={{ color: 'var(--text)', fontSize: 16, marginBottom: 16, textAlign: 'center' }}>
+            Sign up or sign in to access admin features and manage your data securely.
+          </p>
+          <Link href="/dashboard">
+            <button style={{ background: 'var(--primary)', color: '#fff', fontWeight: 600, fontSize: 16, padding: '8px 22px', borderRadius: 6, border: 'none', cursor: 'pointer', transition: 'background 0.2s' }}>
+              Go to Dashboard
+            </button>
+          </Link>
+        </div>
       </section>
     </main>
   );
