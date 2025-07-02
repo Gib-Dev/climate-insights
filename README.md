@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Climate Insights
+
+A professional full-stack Next.js application with PostgreSQL (Supabase), Prisma ORM, and modern best practices. Built for portfolio-quality code, scalability, and real-world features.
+
+## Features
+- Next.js 15 (App Router, TypeScript)
+- Supabase PostgreSQL database
+- Prisma ORM (type-safe, migrations)
+- Full CRUD user management (API + UI)
+- Zod validation and robust error handling
+- Modern UI/UX with Radix Toast notifications
+- Professional code structure and tooling (ESLint, Prettier, Husky)
+
+## Screenshots
+![User Management UI](./public/screenshot.png)
 
 ## Getting Started
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### 1. Clone & Install
+```sh
+git clone https://github.com/your-username/climate-insights.git
+cd climate-insights
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Configure Environment
+Create a `.env` file in the root:
+```
+DATABASE_URL=your_supabase_connection_string
+DIRECT_URL=your_supabase_direct_connection
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Prisma Setup
+```sh
+pnpx prisma generate
+pnpx prisma migrate dev --name init
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Run the App
+```sh
+pnpm dev
+```
+Visit [http://localhost:3000](http://localhost:3000)
 
-## Learn More
+## Usage
+- Add, edit, and delete users from the UI
+- All actions are reflected live and validated
+- API endpoints: `/api/users` (GET, POST), `/api/users/[id]` (PATCH, DELETE)
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Tech Stack
+- Next.js, React, TypeScript
+- Prisma ORM
+- Supabase PostgreSQL
+- Zod, Radix UI
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
