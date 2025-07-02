@@ -1,6 +1,9 @@
+"use client";
 import Link from "next/link";
 import ClimateChart from '../components/ClimateChart';
+import CanadaMap from '../components/CanadaMap';
 import { Map, CloudSun, LayoutDashboard, Github, LucideIcon, Database, BarChart3 } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
 // Vibrant climate palette
 const COLORS = {
@@ -13,14 +16,6 @@ const COLORS = {
   grayDark: '#2C3E50',
   gray: '#7F8C8D',
 };
-
-// Canada SVG Map (minimal, inline)
-const CanadaMap = () => (
-  <svg viewBox="0 0 120 60" width={120} height={60} style={{ display: 'block', margin: '0 auto 12px', opacity: 0.9 }} aria-label="Canada map">
-    <path d="M10,40 Q30,10 60,20 Q90,30 110,10 Q100,40 60,50 Q20,60 10,40 Z" fill="#3282B8" stroke="#0F4C75" strokeWidth="2" />
-    <circle cx="60" cy="30" r="3" fill="#0F4C75" />
-  </svg>
-);
 
 // Animated SVG Waves
 const AnimatedWaves = () => (
@@ -42,12 +37,33 @@ const techStack = [
 ];
 
 export default function Home() {
+  const [provinceData, setProvinceData] = useState<{ code: string; avgTemp: number }[]>([]);
+
+  useEffect(() => {
+    // Fetch weather data and group by province for avgTemp
+    fetch("/api/weatherdata")
+      .then(res => res.json())
+      .then(weather => {
+        const grouped: Record<string, { code: string; temps: number[] }> = {};
+        for (const entry of weather) {
+          const code = entry.province?.code || "?";
+          if (!grouped[code]) grouped[code] = { code, temps: [] };
+          grouped[code].temps.push(entry.temperature);
+        }
+        setProvinceData(
+          Object.values(grouped).map(g => ({
+            code: g.code,
+            avgTemp: g.temps.length ? (g.temps.reduce((a, b) => a + b, 0) / g.temps.length) : 0,
+          }))
+        );
+      });
+  }, []);
+
   return (
     <main style={{ width: '100%' }}>
       {/* Hero Section */}
       <section style={{ margin: '32px 0 24px 0', textAlign: 'center', position: 'relative', overflow: 'hidden', background: 'linear-gradient(180deg, #F8FAFC 80%, #E2E8F0 100%)', borderRadius: 18, minHeight: 320 }}>
         <div style={{ position: 'relative', zIndex: 1, padding: '32px 0 32px 0' }}>
-          <CanadaMap />
           <h1 style={{ fontSize: 36, fontWeight: 900, color: 'var(--primary)', marginBottom: 10 }}>
             Climate Insights
           </h1>
@@ -61,6 +77,12 @@ export default function Home() {
           </Link>
         </div>
         <AnimatedWaves />
+      </section>
+
+      {/* Interactive Canada Map Section */}
+      <section className="card" style={{ margin: '32px 0', textAlign: 'center' }}>
+        <h2 style={{ color: 'var(--primary)', fontSize: 22, fontWeight: 700, margin: '0 0 16px 0' }}>Canada Map (Interactive)</h2>
+        <CanadaMap provinceData={provinceData} />
       </section>
 
       {/* Climate Chart Section */}
