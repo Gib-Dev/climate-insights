@@ -12,9 +12,12 @@
   "dependencies": {
     "@prisma/client": "6.11.0",
     "@radix-ui/react-toast": "^1.2.14",
+    "@supabase/supabase-js": "^2.50.2",
+    "lucide-react": "^0.525.0",
     "next": "15.3.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "recharts": "^3.0.2",
     "zod": "^3.25.67"
   },
   "devDependencies": {
@@ -34,6 +37,7 @@
     "prettier": "^3.6.2",
     "prisma": "6.11.0",
     "tailwindcss": "^4",
+    "tsx": "^4.20.3",
     "typescript": "^5"
   },
   "lint-staged": {

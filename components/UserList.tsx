@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import * as Toast from '@radix-ui/react-toast';
+import { supabase } from '../lib/supabase';
 
 interface User {
   id: number;
@@ -22,6 +23,7 @@ export default function UserList() {
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMsg, setToastMsg] = useState('');
   const [toastType, setToastType] = useState<'success' | 'error'>('success');
+  const [currentUser, setCurrentUser] = useState<any>(null);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -39,6 +41,19 @@ export default function UserList() {
 
   useEffect(() => {
     fetchUsers();
+  }, []);
+
+  React.useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) setCurrentUser(data.user);
+      else setCurrentUser(null);
+    });
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setCurrentUser(session?.user ?? null);
+    });
+    return () => {
+      listener.subscription.unsubscribe();
+    };
   }, []);
 
   const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
@@ -132,6 +147,25 @@ export default function UserList() {
       setLoading(false);
     }
   };
+
+  if (!currentUser) {
+    return (
+      <div style={{ maxWidth: 400, margin: "2rem auto", padding: 24, border: "1px solid #eee", borderRadius: 8, textAlign: 'center' }}>
+        <h3>User Management</h3>
+        <div style={{ color: '#888' }}>Please sign in to manage users.</div>
+      </div>
+    );
+  }
+
+  // Check email confirmation (Supabase: user.email_confirmed_at)
+  if (!currentUser.email_confirmed_at) {
+    return (
+      <div style={{ maxWidth: 400, margin: "2rem auto", padding: 24, border: "1px solid #eee", borderRadius: 8, textAlign: 'center' }}>
+        <h3>User Management</h3>
+        <div style={{ color: '#f59e42' }}>Please confirm your email address to access user management.</div>
+      </div>
+    );
+  }
 
   return (
     <>

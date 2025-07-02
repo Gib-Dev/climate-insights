@@ -22,3 +22,20 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Province {
+  id    Int    @id @default(autoincrement())
+  name  String
+  code  String   @unique
+  weather WeatherData[]
+}
+
+model WeatherData {
+  id         Int      @id @default(autoincrement())
+  province   Province @relation(fields: [provinceId], references: [id])
+  provinceId Int
+  date       DateTime
+  temperature Float
+  precipitation Float
+  createdAt  DateTime @default(now())
+}
