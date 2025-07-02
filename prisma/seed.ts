@@ -9,10 +9,28 @@ const data = [
   { name: 'Saskatchewan', code: 'SK', date: '2025-07-02', temperature: 27.0, precipitation: 0 },
   { name: 'Nova Scotia', code: 'NS', date: '2025-07-02', temperature: 18.0, precipitation: 0 },
   { name: 'New Brunswick', code: 'NB', date: '2025-07-02', temperature: 19.0, precipitation: 0 },
-  { name: 'Newfoundland and Labrador', code: 'NL', date: '2025-07-02', temperature: 16.0, precipitation: 0 },
-  { name: 'Prince Edward Island', code: 'PE', date: '2025-07-02', temperature: 21.0, precipitation: 0 },
+  {
+    name: 'Newfoundland and Labrador',
+    code: 'NL',
+    date: '2025-07-02',
+    temperature: 16.0,
+    precipitation: 0,
+  },
+  {
+    name: 'Prince Edward Island',
+    code: 'PE',
+    date: '2025-07-02',
+    temperature: 21.0,
+    precipitation: 0,
+  },
   { name: 'Yukon', code: 'YT', date: '2025-07-02', temperature: 18.0, precipitation: 0 },
-  { name: 'Northwest Territories', code: 'NT', date: '2025-07-02', temperature: 20.0, precipitation: 0 },
+  {
+    name: 'Northwest Territories',
+    code: 'NT',
+    date: '2025-07-02',
+    temperature: 20.0,
+    precipitation: 0,
+  },
   { name: 'Nunavut', code: 'NU', date: '2025-07-02', temperature: 9.0, precipitation: 0 },
 ];
 
@@ -37,9 +55,11 @@ async function main() {
   console.log('Seed complete!');
 }
 
-main().catch(e => {
-  console.error(e);
-  process.exit(1);
-}).finally(async () => {
-  await prisma.$disconnect();
-}); 
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

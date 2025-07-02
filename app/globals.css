@@ -1,13 +1,13 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
-  --primary: #0F4C75;
-  --secondary: #3282B8;
-  --background: #F8FAFC;
-  --card: #FFFFFF;
-  --text: #1E293B;
-  --border: #E2E8F0;
-  --hover: #0A3A5C;
+  --primary: #0f4c75;
+  --secondary: #3282b8;
+  --background: #f8fafc;
+  --card: #ffffff;
+  --text: #1e293b;
+  --border: #e2e8f0;
+  --hover: #0a3a5c;
 }
 
 @theme inline {
@@ -19,12 +19,13 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #F8FAFC;
+    --background: #f8fafc;
     --foreground: #ededed;
   }
 }
 
-html, body {
+html,
+body {
   background: var(--background);
   color: var(--text);
   font-family: Inter, system-ui, sans-serif;
@@ -34,7 +35,12 @@ html, body {
   padding: 0;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: var(--primary);
   font-family: inherit;
   font-weight: 700;
@@ -74,7 +80,8 @@ button:hover {
   box-shadow: none;
 }
 
-input, select {
+input,
+select {
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 8px;
@@ -85,7 +92,13 @@ input, select {
 }
 
 @media (max-width: 600px) {
-  h1 { font-size: 28px; }
-  h2 { font-size: 22px; }
-  .card { padding: 12px; }
+  h1 {
+    font-size: 28px;
+  }
+  h2 {
+    font-size: 22px;
+  }
+  .card {
+    padding: 12px;
+  }
 }

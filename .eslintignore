@@ -1,0 +1,8 @@
+lib/generated/
+lib/generated/**
+prisma/generated/
+prisma/generated/**
+**/generated/**
+**/prisma/**
+node_modules/
+.next/ 

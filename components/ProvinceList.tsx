@@ -1,7 +1,7 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { Pencil, Trash2 } from "lucide-react";
-import { supabase } from "../lib/supabase";
+'use client';
+import React, { useEffect, useState } from 'react';
+import { Pencil, Trash2 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 interface Province {
   id: number;
@@ -11,24 +11,24 @@ interface Province {
 
 export default function ProvinceList() {
   const [provinces, setProvinces] = useState<Province[]>([]);
-  const [name, setName] = useState("");
-  const [code, setCode] = useState("");
+  const [name, setName] = useState('');
+  const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [editName, setEditName] = useState("");
-  const [editCode, setEditCode] = useState("");
-  const [user, setUser] = useState<any>(null);
+  const [editName, setEditName] = useState('');
+  const [editCode, setEditCode] = useState('');
+  const [user, setUser] = useState<any | null>(null);
 
   const fetchProvinces = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/provinces");
+      const res = await fetch('/api/provinces');
       const data = await res.json();
       setProvinces(data);
     } catch (err) {
-      setError("Failed to fetch provinces");
+      setError('Failed to fetch provinces');
     } finally {
       setLoading(false);
     }
@@ -42,7 +42,9 @@ export default function ProvinceList() {
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
     });
-    return () => { listener?.subscription.unsubscribe(); };
+    return () => {
+      listener?.subscription.unsubscribe();
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -50,21 +52,21 @@ export default function ProvinceList() {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch("/api/provinces", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/provinces', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, code }),
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || "Failed to create province");
+        setError(data.error || 'Failed to create province');
       } else {
-        setName("");
-        setCode("");
+        setName('');
+        setCode('');
         fetchProvinces();
       }
     } catch (err) {
-      setError("Failed to create province");
+      setError('Failed to create province');
     } finally {
       setLoading(false);
     }
@@ -74,15 +76,15 @@ export default function ProvinceList() {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch(`/api/provinces/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/provinces/${id}`, { method: 'DELETE' });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || "Failed to delete province");
+        setError(data.error || 'Failed to delete province');
       } else {
         fetchProvinces();
       }
     } catch (err) {
-      setError("Failed to delete province");
+      setError('Failed to delete province');
     } finally {
       setLoading(false);
     }
@@ -101,28 +103,36 @@ export default function ProvinceList() {
     setLoading(true);
     try {
       const res = await fetch(`/api/provinces/${editingId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: editName, code: editCode }),
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || "Failed to update province");
+        setError(data.error || 'Failed to update province');
       } else {
         setEditingId(null);
-        setEditName("");
-        setEditCode("");
+        setEditName('');
+        setEditCode('');
         fetchProvinces();
       }
     } catch (err) {
-      setError("Failed to update province");
+      setError('Failed to update province');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ maxWidth: 500, margin: "2rem auto", padding: 24, border: "1px solid #eee", borderRadius: 8 }}>
+    <div
+      style={{
+        maxWidth: 500,
+        margin: '2rem auto',
+        padding: 24,
+        border: '1px solid #eee',
+        borderRadius: 8,
+      }}
+    >
       <h2>Provinces</h2>
       {user ? (
         <form onSubmit={handleSubmit} style={{ marginBottom: 24 }}>
@@ -130,28 +140,32 @@ export default function ProvinceList() {
             type="text"
             placeholder="Name"
             value={name}
-            onChange={e => setName(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
             required
-            style={{ width: "48%", marginRight: 8, padding: 8 }}
+            style={{ width: '48%', marginRight: 8, padding: 8 }}
           />
           <input
             type="text"
             placeholder="Code"
             value={code}
-            onChange={e => setCode(e.target.value)}
+            onChange={(e) => setCode(e.target.value)}
             required
-            style={{ width: "30%", marginRight: 8, padding: 8 }}
+            style={{ width: '30%', marginRight: 8, padding: 8 }}
           />
           <button type="submit" disabled={loading} style={{ padding: 8 }}>
-            {loading ? "Saving..." : "Add Province"}
+            {loading ? 'Saving...' : 'Add Province'}
           </button>
         </form>
       ) : (
         <div style={{ marginBottom: 24, color: 'var(--primary)', fontWeight: 600 }}>
-          Please <a href="/dashboard" style={{ color: 'var(--secondary)', textDecoration: 'underline' }}>log in</a> to add or edit provinces.
+          Please{' '}
+          <a href="/dashboard" style={{ color: 'var(--secondary)', textDecoration: 'underline' }}>
+            log in
+          </a>{' '}
+          to add or edit provinces.
         </div>
       )}
-      {error && <div style={{ color: "red", marginBottom: 12 }}>{error}</div>}
+      {error && <div style={{ color: 'red', marginBottom: 12 }}>{error}</div>}
       <h3>List</h3>
       {loading && provinces.length === 0 ? (
         <div>Loading...</div>
@@ -159,21 +173,24 @@ export default function ProvinceList() {
         <div>No provinces found.</div>
       ) : (
         <ul style={{ padding: 0, listStyle: 'none' }}>
-          {provinces.map(province => (
-            <li key={province.id} style={{ marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+          {provinces.map((province) => (
+            <li
+              key={province.id}
+              style={{ marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}
+            >
               {editingId === province.id ? (
-                <form onSubmit={handleEdit} style={{ display: "inline" }}>
+                <form onSubmit={handleEdit} style={{ display: 'inline' }}>
                   <input
                     type="text"
                     value={editName}
-                    onChange={e => setEditName(e.target.value)}
+                    onChange={(e) => setEditName(e.target.value)}
                     required
                     style={{ width: 120, marginRight: 4 }}
                   />
                   <input
                     type="text"
                     value={editCode}
-                    onChange={e => setEditCode(e.target.value)}
+                    onChange={(e) => setEditCode(e.target.value)}
                     required
                     style={{ width: 60, marginRight: 4 }}
                   />
@@ -226,7 +243,9 @@ export default function ProvinceList() {
           font-size: 15px;
           font-weight: 600;
           cursor: pointer;
-          transition: background 0.2s, color 0.2s;
+          transition:
+            background 0.2s,
+            color 0.2s;
         }
         .icon-btn:hover {
           background: var(--hover);
@@ -245,4 +264,4 @@ export default function ProvinceList() {
       `}</style>
     </div>
   );
-} 
+}

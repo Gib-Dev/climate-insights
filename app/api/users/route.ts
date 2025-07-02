@@ -21,19 +21,25 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const parsed = userSchema.safeParse(body);
     if (!parsed.success) {
-      return NextResponse.json({ error: 'Invalid input', details: parsed.error.errors }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Invalid input', details: parsed.error.errors },
+        { status: 400 },
+      );
     }
     try {
       const user = await prisma.user.create({ data: parsed.data });
       return NextResponse.json(user, { status: 201 });
-    } catch (error: any) {
-      if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message.includes('P2002') && error.message.includes('email')) {
         return NextResponse.json({ error: 'Email already exists' }, { status: 409 });
       }
       throw error;
     }
   } catch (error) {
     console.error('Create user error:', error);
-    return NextResponse.json({ error: 'Failed to create user', details: error?.toString() }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to create user', details: error?.toString() },
+      { status: 500 },
+    );
   }
-} 
+}

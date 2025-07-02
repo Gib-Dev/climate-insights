@@ -21,18 +21,24 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const parsed = provinceSchema.safeParse(body);
     if (!parsed.success) {
-      return NextResponse.json({ error: 'Invalid input', details: parsed.error.errors }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Invalid input', details: parsed.error.errors },
+        { status: 400 },
+      );
     }
     try {
       const province = await prisma.province.create({ data: parsed.data });
       return NextResponse.json(province, { status: 201 });
-    } catch (error: any) {
-      if (error.code === 'P2002' && error.meta?.target?.includes('code')) {
+    } catch (error: unknown) {
+      if (error instanceof Error && error.message.includes('P2002') && error.message.includes('code')) {
         return NextResponse.json({ error: 'Province code already exists' }, { status: 409 });
       }
       throw error;
     }
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to create province', details: error?.toString() }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to create province', details: error?.toString() },
+      { status: 500 },
+    );
   }
-} 
+}

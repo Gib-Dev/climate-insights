@@ -30,11 +30,17 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const parsed = weatherDataSchema.safeParse(body);
     if (!parsed.success) {
-      return NextResponse.json({ error: 'Invalid input', details: parsed.error.errors }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Invalid input', details: parsed.error.errors },
+        { status: 400 },
+      );
     }
     const weather = await prisma.weatherData.create({ data: parsed.data });
     return NextResponse.json(weather, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to create weather data', details: error?.toString() }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to create weather data', details: error?.toString() },
+      { status: 500 },
+    );
   }
-} 
+}

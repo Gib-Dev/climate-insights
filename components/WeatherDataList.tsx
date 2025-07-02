@@ -1,7 +1,7 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { Pencil, Trash2 } from "lucide-react";
-import { supabase } from "../lib/supabase";
+'use client';
+import React, { useEffect, useState } from 'react';
+import { Pencil, Trash2 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 interface Province {
   id: number;
@@ -21,22 +21,22 @@ interface WeatherData {
 export default function WeatherDataList() {
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [weather, setWeather] = useState<WeatherData[]>([]);
-  const [provinceId, setProvinceId] = useState<number | "">("");
-  const [date, setDate] = useState("");
-  const [temperature, setTemperature] = useState("");
-  const [precipitation, setPrecipitation] = useState("");
+  const [provinceId, setProvinceId] = useState<number | ''>('');
+  const [date, setDate] = useState('');
+  const [temperature, setTemperature] = useState('');
+  const [precipitation, setPrecipitation] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [editProvinceId, setEditProvinceId] = useState<number | "">("");
-  const [editDate, setEditDate] = useState("");
-  const [editTemperature, setEditTemperature] = useState("");
-  const [editPrecipitation, setEditPrecipitation] = useState("");
-  const [user, setUser] = useState<any>(null);
+  const [editProvinceId, setEditProvinceId] = useState<number | ''>('');
+  const [editDate, setEditDate] = useState('');
+  const [editTemperature, setEditTemperature] = useState('');
+  const [editPrecipitation, setEditPrecipitation] = useState('');
+  const [user, setUser] = useState<unknown>(null);
 
   const fetchProvinces = async () => {
     try {
-      const res = await fetch("/api/provinces");
+      const res = await fetch('/api/provinces');
       const data = await res.json();
       setProvinces(data);
     } catch {}
@@ -46,11 +46,11 @@ export default function WeatherDataList() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/weatherdata");
+      const res = await fetch('/api/weatherdata');
       const data = await res.json();
       setWeather(data);
     } catch (err) {
-      setError("Failed to fetch weather data");
+      setError('Failed to fetch weather data');
     } finally {
       setLoading(false);
     }
@@ -65,7 +65,9 @@ export default function WeatherDataList() {
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
     });
-    return () => { listener?.subscription.unsubscribe(); };
+    return () => {
+      listener?.subscription.unsubscribe();
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -73,9 +75,9 @@ export default function WeatherDataList() {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch("/api/weatherdata", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/weatherdata', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           provinceId: Number(provinceId),
           date,
@@ -85,16 +87,16 @@ export default function WeatherDataList() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || "Failed to create weather data");
+        setError(data.error || 'Failed to create weather data');
       } else {
-        setProvinceId("");
-        setDate("");
-        setTemperature("");
-        setPrecipitation("");
+        setProvinceId('');
+        setDate('');
+        setTemperature('');
+        setPrecipitation('');
         fetchWeather();
       }
     } catch (err) {
-      setError("Failed to create weather data");
+      setError('Failed to create weather data');
     } finally {
       setLoading(false);
     }
@@ -104,15 +106,15 @@ export default function WeatherDataList() {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch(`/api/weatherdata/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/weatherdata/${id}`, { method: 'DELETE' });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || "Failed to delete weather data");
+        setError(data.error || 'Failed to delete weather data');
       } else {
         fetchWeather();
       }
     } catch (err) {
-      setError("Failed to delete weather data");
+      setError('Failed to delete weather data');
     } finally {
       setLoading(false);
     }
@@ -133,8 +135,8 @@ export default function WeatherDataList() {
     setLoading(true);
     try {
       const res = await fetch(`/api/weatherdata/${editingId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           provinceId: Number(editProvinceId),
           date: editDate,
@@ -144,42 +146,56 @@ export default function WeatherDataList() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || "Failed to update weather data");
+        setError(data.error || 'Failed to update weather data');
       } else {
         setEditingId(null);
-        setEditProvinceId("");
-        setEditDate("");
-        setEditTemperature("");
-        setEditPrecipitation("");
+        setEditProvinceId('');
+        setEditDate('');
+        setEditTemperature('');
+        setEditPrecipitation('');
         fetchWeather();
       }
     } catch (err) {
-      setError("Failed to update weather data");
+      setError('Failed to update weather data');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ maxWidth: 600, margin: "2rem auto", padding: 24, border: "1px solid #eee", borderRadius: 8 }} className="weather-data-card">
+    <div
+      style={{
+        maxWidth: 600,
+        margin: '2rem auto',
+        padding: 24,
+        border: '1px solid #eee',
+        borderRadius: 8,
+      }}
+      className="weather-data-card"
+    >
       <h2>Weather Data</h2>
       {user ? (
-        <form onSubmit={handleSubmit} style={{ marginBottom: 24, display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+        <form
+          onSubmit={handleSubmit}
+          style={{ marginBottom: 24, display: 'flex', flexWrap: 'wrap', gap: 8 }}
+        >
           <select
             value={provinceId}
-            onChange={e => setProvinceId(Number(e.target.value))}
+            onChange={(e) => setProvinceId(Number(e.target.value))}
             required
             style={{ width: 120, padding: 8 }}
           >
             <option value="">Province</option>
-            {provinces.map(p => (
-              <option key={p.id} value={p.id}>{p.name}</option>
+            {provinces.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name}
+              </option>
             ))}
           </select>
           <input
             type="date"
             value={date}
-            onChange={e => setDate(e.target.value)}
+            onChange={(e) => setDate(e.target.value)}
             required
             style={{ width: 130, padding: 8 }}
           />
@@ -187,7 +203,7 @@ export default function WeatherDataList() {
             type="number"
             placeholder="Temperature (°C)"
             value={temperature}
-            onChange={e => setTemperature(e.target.value)}
+            onChange={(e) => setTemperature(e.target.value)}
             required
             style={{ width: 140, padding: 8 }}
           />
@@ -195,20 +211,24 @@ export default function WeatherDataList() {
             type="number"
             placeholder="Precipitation (mm)"
             value={precipitation}
-            onChange={e => setPrecipitation(e.target.value)}
+            onChange={(e) => setPrecipitation(e.target.value)}
             required
             style={{ width: 140, padding: 8 }}
           />
           <button type="submit" disabled={loading} style={{ padding: 8 }}>
-            {loading ? "Saving..." : "Add Data"}
+            {loading ? 'Saving...' : 'Add Data'}
           </button>
         </form>
       ) : (
         <div style={{ marginBottom: 24, color: 'var(--primary)', fontWeight: 600 }}>
-          Please <a href="/dashboard" style={{ color: 'var(--secondary)', textDecoration: 'underline' }}>log in</a> to add or edit weather data.
+          Please{' '}
+          <a href="/dashboard" style={{ color: 'var(--secondary)', textDecoration: 'underline' }}>
+            log in
+          </a>{' '}
+          to add or edit weather data.
         </div>
       )}
-      {error && <div style={{ color: "red", marginBottom: 12 }}>{error}</div>}
+      {error && <div style={{ color: 'red', marginBottom: 12 }}>{error}</div>}
       <h3>List</h3>
       {loading && weather.length === 0 ? (
         <div>Loading...</div>
@@ -216,39 +236,45 @@ export default function WeatherDataList() {
         <div>No weather data found.</div>
       ) : (
         <ul style={{ padding: 0, listStyle: 'none' }}>
-          {weather.map(entry => (
-            <li key={entry.id} className="weather-list-item" style={{ marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+          {weather.map((entry) => (
+            <li
+              key={entry.id}
+              className="weather-list-item"
+              style={{ marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}
+            >
               {editingId === entry.id ? (
-                <form onSubmit={handleEdit} style={{ display: "inline" }}>
+                <form onSubmit={handleEdit} style={{ display: 'inline' }}>
                   <select
                     value={editProvinceId}
-                    onChange={e => setEditProvinceId(Number(e.target.value))}
+                    onChange={(e) => setEditProvinceId(Number(e.target.value))}
                     required
                     style={{ width: 100, marginRight: 4 }}
                   >
                     <option value="">Province</option>
-                    {provinces.map(p => (
-                      <option key={p.id} value={p.id}>{p.name}</option>
+                    {provinces.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name}
+                      </option>
                     ))}
                   </select>
                   <input
                     type="date"
                     value={editDate}
-                    onChange={e => setEditDate(e.target.value)}
+                    onChange={(e) => setEditDate(e.target.value)}
                     required
                     style={{ width: 110, marginRight: 4 }}
                   />
                   <input
                     type="number"
                     value={editTemperature}
-                    onChange={e => setEditTemperature(e.target.value)}
+                    onChange={(e) => setEditTemperature(e.target.value)}
                     required
                     style={{ width: 80, marginRight: 4 }}
                   />
                   <input
                     type="number"
                     value={editPrecipitation}
-                    onChange={e => setEditPrecipitation(e.target.value)}
+                    onChange={(e) => setEditPrecipitation(e.target.value)}
                     required
                     style={{ width: 80, marginRight: 4 }}
                   />
@@ -261,7 +287,8 @@ export default function WeatherDataList() {
                 </form>
               ) : (
                 <>
-                  <strong>{entry.province?.name || "?"}</strong> | {entry.date.slice(0, 10)} | {entry.temperature}°C | {entry.precipitation} mm
+                  <strong>{entry.province?.name || '?'}</strong> | {entry.date.slice(0, 10)} |{' '}
+                  {entry.temperature}°C | {entry.precipitation} mm
                   {user && (
                     <>
                       <button
@@ -301,7 +328,9 @@ export default function WeatherDataList() {
           font-size: 15px;
           font-weight: 600;
           cursor: pointer;
-          transition: background 0.2s, color 0.2s;
+          transition:
+            background 0.2s,
+            color 0.2s;
         }
         .icon-btn:hover {
           background: var(--hover);
@@ -330,4 +359,4 @@ export default function WeatherDataList() {
       `}</style>
     </div>
   );
-} 
+}

@@ -1,14 +1,14 @@
-"use client";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Home, Map, CloudSun, LayoutDashboard, Menu, X, Cloud } from "lucide-react";
-import { useState } from "react";
+'use client';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Home, Map, CloudSun, LayoutDashboard, Menu, X, Cloud } from 'lucide-react';
+import { useState } from 'react';
 
 const navLinks = [
-  { href: "/", label: "Home", icon: Home },
-  { href: "/provinces", label: "Provinces", icon: Map },
-  { href: "/weather", label: "Weather Data", icon: CloudSun },
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: '/', label: 'Home', icon: Home },
+  { href: '/provinces', label: 'Provinces', icon: Map },
+  { href: '/weather', label: 'Weather Data', icon: CloudSun },
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
 ];
 
 export default function NavBar() {
@@ -16,27 +16,41 @@ export default function NavBar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav style={{
-      width: '100%',
-      background: 'var(--primary)',
-      borderBottom: '1px solid var(--border)',
-      padding: '0.5rem 0',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      position: 'sticky',
-      top: 0,
-      zIndex: 100,
-      minHeight: 56,
-    }}>
+    <nav
+      style={{
+        width: '100%',
+        background: 'var(--primary)',
+        borderBottom: '1px solid var(--border)',
+        padding: '0.5rem 0',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
+        minHeight: 56,
+      }}
+    >
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 24 }}>
         <Cloud size={28} color="#fff" style={{ marginRight: 8 }} />
-        <Link href="/" style={{ fontWeight: 800, fontSize: 22, color: '#fff', letterSpacing: 1, textDecoration: 'none' }}>
+        <Link
+          href="/"
+          style={{
+            fontWeight: 800,
+            fontSize: 22,
+            color: '#fff',
+            letterSpacing: 1,
+            textDecoration: 'none',
+          }}
+        >
           Climate Insights
         </Link>
       </div>
       {/* Desktop Nav Links */}
-      <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 32, marginRight: 24 }}>
+      <div
+        className="nav-links"
+        style={{ display: 'flex', alignItems: 'center', gap: 32, marginRight: 24 }}
+      >
         <div className="nav-desktop" style={{ display: 'flex', gap: 32 }}>
           {navLinks.map(({ href, label, icon: Icon }) => {
             const isActive = pathname === href || (href !== '/' && pathname.startsWith(href));
@@ -56,7 +70,9 @@ export default function NavBar() {
                   padding: '6px 14px',
                   borderRadius: 8,
                   background: isActive ? 'rgba(50,130,184,0.18)' : 'none',
-                  borderBottom: isActive ? '2.5px solid var(--secondary)' : '2.5px solid transparent',
+                  borderBottom: isActive
+                    ? '2.5px solid var(--secondary)'
+                    : '2.5px solid transparent',
                   transition: 'color 0.2s, background 0.2s, border-bottom 0.2s',
                 }}
                 tabIndex={0}
@@ -70,8 +86,8 @@ export default function NavBar() {
         {/* Hamburger Icon for Mobile */}
         <button
           className="nav-hamburger"
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
-          onClick={() => setMenuOpen(m => !m)}
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          onClick={() => setMenuOpen((m) => !m)}
           style={{
             background: 'none',
             border: 'none',
@@ -87,20 +103,23 @@ export default function NavBar() {
       </div>
       {/* Mobile Dropdown Menu */}
       {menuOpen && (
-        <div className="nav-mobile-menu" style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          background: 'rgba(15,76,117,0.98)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 9999,
-          transition: 'opacity 0.2s',
-        }}>
+        <div
+          className="nav-mobile-menu"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: 'rgba(15,76,117,0.98)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+            transition: 'opacity 0.2s',
+          }}
+        >
           {navLinks.map(({ href, label, icon: Icon }) => {
             const isActive = pathname === href || (href !== '/' && pathname.startsWith(href));
             return (
@@ -120,7 +139,9 @@ export default function NavBar() {
                   borderRadius: 10,
                   margin: '8px 0',
                   background: isActive ? 'rgba(50,130,184,0.18)' : 'none',
-                  borderBottom: isActive ? '2.5px solid var(--secondary)' : '2.5px solid transparent',
+                  borderBottom: isActive
+                    ? '2.5px solid var(--secondary)'
+                    : '2.5px solid transparent',
                   transition: 'color 0.2s, background 0.2s, border-bottom 0.2s',
                 }}
                 tabIndex={0}
@@ -149,7 +170,7 @@ export default function NavBar() {
         }
         .nav-link:hover {
           color: var(--hover) !important;
-          background: rgba(10,58,92,0.12) !important;
+          background: rgba(10, 58, 92, 0.12) !important;
         }
         .nav-link.active {
           color: var(--secondary) !important;
@@ -158,4 +179,4 @@ export default function NavBar() {
       `}</style>
     </nav>
   );
-} 
+}
