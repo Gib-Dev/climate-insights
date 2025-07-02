@@ -1,6 +1,4 @@
-import { PrismaClient } from '../lib/generated/prisma';
-
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prisma';
 
 const data = [
   { name: 'Ontario', code: 'ON', date: '2025-07-02', temperature: 25.0, precipitation: 0 },

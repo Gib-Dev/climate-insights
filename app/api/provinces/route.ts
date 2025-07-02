@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '../../../lib/generated/prisma';
+import { prisma } from '../../../lib/prisma';
 import { z } from 'zod';
-
-const prisma = new PrismaClient();
 
 const provinceSchema = z.object({
   name: z.string().min(2),
