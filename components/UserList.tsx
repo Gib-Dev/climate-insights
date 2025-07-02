@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import * as Toast from '@radix-ui/react-toast';
 import { supabase } from '../lib/supabase';
+import { Pencil, Trash2 } from 'lucide-react';
 
 interface User {
   id: number;
@@ -198,9 +199,9 @@ export default function UserList() {
         ) : users.length === 0 ? (
           <div>No users found.</div>
         ) : (
-          <ul>
+          <ul style={{ padding: 0, listStyle: 'none' }}>
             {users.map(user => (
-              <li key={user.id} style={{ marginBottom: 8 }}>
+              <li key={user.id} style={{ marginBottom: 12 }}>
                 {editingId === user.id ? (
                   <form onSubmit={handleEdit} style={{ display: "inline" }}>
                     <input
@@ -224,20 +225,63 @@ export default function UserList() {
                     </button>
                   </form>
                 ) : (
-                  <>
-                    <strong>{user.email}</strong> {user.name && `(${user.name})`}
-                    <button onClick={() => startEdit(user)} style={{ marginLeft: 8 }}>
-                      Edit
-                    </button>
-                    <button onClick={() => handleDelete(user.id)} style={{ marginLeft: 4, color: "red" }}>
-                      Delete
-                    </button>
-                  </>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <strong>{user.email}</strong>
+                      {user.name && <span style={{ color: '#888', marginLeft: 4 }}>({user.name})</span>}
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <button
+                        onClick={() => startEdit(user)}
+                        aria-label="Edit"
+                        className="icon-btn"
+                      >
+                        <Pencil size={18} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(user.id)}
+                        aria-label="Delete"
+                        className="icon-btn delete"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  </div>
                 )}
               </li>
             ))}
           </ul>
         )}
+        <style jsx global>{`
+          .icon-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+          }
+          .icon-btn:hover {
+            background: var(--hover);
+            color: #fff;
+          }
+          .icon-btn.delete {
+            background: #fff;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+          }
+          .icon-btn.delete:hover {
+            background: #fff;
+            color: var(--hover);
+            border: 1px solid var(--hover);
+          }
+        `}</style>
       </div>
       <Toast.Provider swipeDirection="right">
         <Toast.Root open={toastOpen} onOpenChange={setToastOpen} style={{

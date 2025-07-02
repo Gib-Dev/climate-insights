@@ -40,6 +40,8 @@ export default function ClimateChart() {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
+  const [chartHeight, setChartHeight] = useState(350); // Default for SSR
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,8 +65,16 @@ export default function ClimateChart() {
     fetchData();
   }, []);
 
-  // Responsive height: 350px desktop, 220px mobile
-  const chartHeight = typeof window !== 'undefined' && window.innerWidth < 600 ? 220 : 350;
+  useEffect(() => {
+    // Set chart height responsively after mount
+    const handleResize = () => {
+      setChartHeight(window.innerWidth < 600 ? 220 : 350);
+    };
+    handleResize();
+    setMounted(true);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div className="climate-chart-card" style={{ background: BG, borderRadius: 12, padding: 16, border: `1px solid ${GRID}`, width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
@@ -74,26 +84,28 @@ export default function ClimateChart() {
           <div style={{ width: '100%', height: 24, background: GRID, borderRadius: 6, opacity: 0.5 }} />
         </div>
       ) : (
-        <div style={{ width: '100%', height: chartHeight, minWidth: 0 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data} margin={{ top: 8, right: 16, left: 16, bottom: 24 }} barCategoryGap={24} barGap={4} style={{ background: BG }}>
-              <CartesianGrid stroke={GRID} strokeDasharray="3 3" />
-              <XAxis dataKey="code" stroke={TEXT} fontSize={14} />
-              <YAxis stroke={TEXT} fontSize={14} label={{ value: '°C', angle: -90, position: 'insideLeft', fill: TEXT }} />
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: '#E2E8F0', opacity: 0.3 }} />
-              <Bar
-                dataKey="avgTemp"
-                fill={PRIMARY}
-                radius={[4, 4, 0, 0]}
-                isAnimationActive={false}
-                onMouseOver={(_, idx) => setHovered(data[idx]?.code)}
-                onMouseOut={() => setHovered(null)}
-              >
-                <LabelList dataKey="avgTemp" position="top" formatter={(label) => typeof label === 'number' ? label.toFixed(1) : ''} fill={PRIMARY} className="chart-label-list" />
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        mounted && (
+          <div style={{ width: '100%', height: chartHeight, minWidth: 0 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data} margin={{ top: 8, right: 16, left: 16, bottom: 24 }} barCategoryGap={24} barGap={4} style={{ background: BG }}>
+                <CartesianGrid stroke={GRID} strokeDasharray="3 3" />
+                <XAxis dataKey="code" stroke={TEXT} fontSize={14} />
+                <YAxis stroke={TEXT} fontSize={14} label={{ value: '°C', angle: -90, position: 'insideLeft', fill: TEXT }} />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: '#E2E8F0', opacity: 0.3 }} />
+                <Bar
+                  dataKey="avgTemp"
+                  fill={PRIMARY}
+                  radius={[4, 4, 0, 0]}
+                  isAnimationActive={false}
+                  onMouseOver={(_, idx) => setHovered(data[idx]?.code)}
+                  onMouseOut={() => setHovered(null)}
+                >
+                  <LabelList dataKey="avgTemp" position="top" formatter={(label) => typeof label === 'number' ? label.toFixed(1) : ''} fill={PRIMARY} className="chart-label-list" />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        )
       )}
       <style jsx global>{`
         .climate-chart-card {
