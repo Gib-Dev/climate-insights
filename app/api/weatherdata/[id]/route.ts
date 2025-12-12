@@ -53,6 +53,11 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       );
     }
 
+    const date = new Date(parse.data.date);
+    if (Number.isNaN(date.getTime())) {
+      return NextResponse.json({ error: 'Invalid date' }, { status: 400 });
+    }
+
     const existing = await prisma.weatherData.findUnique({ where: { id: weatherId } });
     if (!existing) {
       return NextResponse.json({ error: 'Weather data not found' }, { status: 404 });
@@ -69,7 +74,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       where: { id: weatherId },
       data: {
         ...parse.data,
-        date: new Date(parse.data.date),
+        date,
       },
     });
     return NextResponse.json(updated);

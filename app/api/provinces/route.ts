@@ -5,7 +5,11 @@ import { z } from 'zod';
 
 const provinceSchema = z.object({
   name: z.string().min(2),
-  code: z.string().min(2).max(2).toUpperCase(),
+  code: z
+    .string()
+    .trim()
+    .length(2)
+    .transform((val) => val.toUpperCase()),
 });
 
 export async function GET() {

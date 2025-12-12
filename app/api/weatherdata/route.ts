@@ -43,6 +43,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const date = new Date(parsed.data.date);
+    if (Number.isNaN(date.getTime())) {
+      return NextResponse.json({ error: 'Invalid date' }, { status: 400 });
+    }
+
     const province = await prisma.province.findUnique({
       where: { id: parsed.data.provinceId },
     });
@@ -53,7 +58,7 @@ export async function POST(req: NextRequest) {
     const weather = await prisma.weatherData.create({
       data: {
         ...parsed.data,
-        date: new Date(parsed.data.date),
+        date,
       },
     });
     return NextResponse.json(weather, { status: 201 });
