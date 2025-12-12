@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '../../../lib/prisma';
+import { getAuthenticatedClient } from '../../../lib/auth';
 import { z } from 'zod';
 
 const weatherDataSchema = z.object({
-  provinceId: z.number().int(),
+  provinceId: z.number().int().positive(),
   date: z.string().datetime(),
-  temperature: z.number(),
-  precipitation: z.number(),
+  temperature: z.number().min(-50).max(50),
+  precipitation: z.number().min(0),
 });
 
 export async function GET(req: NextRequest) {
@@ -21,12 +22,18 @@ export async function GET(req: NextRequest) {
     });
     return NextResponse.json(weather);
   } catch (error) {
+    console.error('Failed to fetch weather data:', error);
     return NextResponse.json({ error: 'Failed to fetch weather data' }, { status: 500 });
   }
 }
 
 export async function POST(req: NextRequest) {
   try {
+    const auth = await getAuthenticatedClient(req);
+    if (!auth) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await req.json();
     const parsed = weatherDataSchema.safeParse(body);
     if (!parsed.success) {
@@ -35,9 +42,23 @@ export async function POST(req: NextRequest) {
         { status: 400 },
       );
     }
-    const weather = await prisma.weatherData.create({ data: parsed.data });
+
+    const province = await prisma.province.findUnique({
+      where: { id: parsed.data.provinceId },
+    });
+    if (!province) {
+      return NextResponse.json({ error: 'Province not found' }, { status: 404 });
+    }
+
+    const weather = await prisma.weatherData.create({
+      data: {
+        ...parsed.data,
+        date: new Date(parsed.data.date),
+      },
+    });
     return NextResponse.json(weather, { status: 201 });
   } catch (error) {
+    console.error('Failed to create weather data:', error);
     return NextResponse.json(
       { error: 'Failed to create weather data', details: error?.toString() },
       { status: 500 },

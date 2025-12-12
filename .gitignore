@@ -33,3 +33,8 @@ Thumbs.db
 # Others
 *.local
 *.pem
+
+# Analysis and documentation (temporary)
+PROJECT_ANALYSIS.md
+SUPABASE_SECURITY_FIX.md
+TESTING_GUIDE.md
