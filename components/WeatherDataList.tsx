@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { authenticatedFetch } from '../lib/api-client';
 
 interface Province {
   id: number;
@@ -75,12 +76,11 @@ export default function WeatherDataList() {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch('/api/weatherdata', {
+      const res = await authenticatedFetch('/api/weatherdata', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           provinceId: Number(provinceId),
-          date,
+          date: new Date(date).toISOString(),
           temperature: Number(temperature),
           precipitation: Number(precipitation),
         }),
@@ -106,7 +106,7 @@ export default function WeatherDataList() {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch(`/api/weatherdata/${id}`, { method: 'DELETE' });
+      const res = await authenticatedFetch(`/api/weatherdata/${id}`, { method: 'DELETE' });
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || 'Failed to delete weather data');
@@ -134,12 +134,11 @@ export default function WeatherDataList() {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch(`/api/weatherdata/${editingId}`, {
+      const res = await authenticatedFetch(`/api/weatherdata/${editingId}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           provinceId: Number(editProvinceId),
-          date: editDate,
+          date: new Date(editDate).toISOString(),
           temperature: Number(editTemperature),
           precipitation: Number(editPrecipitation),
         }),

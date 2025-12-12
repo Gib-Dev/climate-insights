@@ -2,14 +2,7 @@
 import Link from 'next/link';
 import ClimateChart from '../components/ClimateChart';
 import CanadaMap from '../components/CanadaMap';
-import {
-  Map,
-  CloudSun,
-  LayoutDashboard,
-  Github,
-  Database,
-  BarChart3,
-} from 'lucide-react';
+import { Map, CloudSun, LayoutDashboard, Github, Database, BarChart3 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 // Animated SVG Waves
@@ -224,8 +217,23 @@ export default function Home() {
       </section>
 
       {/* Built With Row */}
-      <section style={{ margin: '32px 0 0 0', textAlign: 'center' }}>
-        <div
+      <section
+        style={{ margin: '32px 0 0 0', textAlign: 'center' }}
+        aria-label="Technologies used"
+      >
+        <h2
+          style={{
+            fontSize: 18,
+            fontWeight: 600,
+            color: 'var(--text)',
+            marginBottom: 16,
+            opacity: 0.7,
+          }}
+        >
+          Built with
+        </h2>
+        <nav
+          aria-label="Technology links"
           style={{
             display: 'inline-flex',
             gap: 32,
@@ -242,6 +250,7 @@ export default function Home() {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={`Visit ${label} website`}
               style={{
                 color: 'var(--primary)',
                 textDecoration: 'none',
@@ -254,11 +263,11 @@ export default function Home() {
                 transition: 'color 0.2s',
               }}
             >
-              <Icon size={26} />
-              {label}
+              <Icon size={26} aria-hidden="true" />
+              <span>{label}</span>
             </a>
           ))}
-        </div>
+        </nav>
       </section>
     </main>
   );

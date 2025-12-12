@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { authenticatedFetch } from '../lib/api-client';
 
 interface Province {
   id: number;
@@ -52,9 +53,8 @@ export default function ProvinceList() {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch('/api/provinces', {
+      const res = await authenticatedFetch('/api/provinces', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, code }),
       });
       const data = await res.json();
@@ -76,7 +76,7 @@ export default function ProvinceList() {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch(`/api/provinces/${id}`, { method: 'DELETE' });
+      const res = await authenticatedFetch(`/api/provinces/${id}`, { method: 'DELETE' });
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || 'Failed to delete province');
@@ -102,9 +102,8 @@ export default function ProvinceList() {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch(`/api/provinces/${editingId}`, {
+      const res = await authenticatedFetch(`/api/provinces/${editingId}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: editName, code: editCode }),
       });
       const data = await res.json();

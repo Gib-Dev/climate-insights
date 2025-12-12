@@ -2,9 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import * as Toast from '@radix-ui/react-toast';
 import { supabase } from '../lib/supabase';
+import { authenticatedFetch } from '../lib/api-client';
 import { Pencil, Trash2 } from 'lucide-react';
 
-type User = { id: string; email?: string };
+type User = { id: number; email?: string; name?: string };
 
 export default function UserList() {
   const [users, setUsers] = useState<User[]>([]);
@@ -12,7 +13,7 @@ export default function UserList() {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [editEmail, setEditEmail] = useState('');
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMsg, setToastMsg] = useState('');
@@ -62,9 +63,8 @@ export default function UserList() {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch('/api/users', {
+      const res = await authenticatedFetch('/api/users', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, name }),
       });
       const data = await res.json();
@@ -85,11 +85,11 @@ export default function UserList() {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: number) => {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch(`/api/users/${id}`, { method: 'DELETE' });
+      const res = await authenticatedFetch(`/api/users/${id}`, { method: 'DELETE' });
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || 'Failed to delete user');
@@ -117,9 +117,8 @@ export default function UserList() {
     setError(null);
     setLoading(true);
     try {
-      const res = await fetch(`/api/users/${editingId}`, {
+      const res = await authenticatedFetch(`/api/users/${editingId}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: editEmail }),
       });
       const data = await res.json();
