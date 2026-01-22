@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   BarChart,
   Bar,
@@ -17,7 +17,18 @@ const GRID = '#E2E8F0';
 const BG = '#FFFFFF';
 const TEXT = '#1E293B';
 
-function CustomTooltip({ active, payload }: any) {
+interface ChartDataItem {
+  name: string;
+  code: string;
+  avgTemp: number;
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{ payload: ChartDataItem }>;
+}
+
+function CustomTooltip({ active, payload }: CustomTooltipProps) {
   if (active && payload && payload.length) {
     const { name, avgTemp } = payload[0].payload;
     return (
@@ -40,44 +51,35 @@ function CustomTooltip({ active, payload }: any) {
   return null;
 }
 
-export default function ClimateChart() {
-  const [data, setData] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [hovered, setHovered] = useState<string | null>(null);
-  const [chartHeight, setChartHeight] = useState(350); // Default for SSR
+interface ClimateChartProps {
+  data?: ChartDataItem[];
+  loading?: boolean;
+}
+
+export default function ClimateChart({ data = [], loading = false }: ClimateChartProps) {
+  const [chartHeight, setChartHeight] = useState(350);
   const [mounted, setMounted] = useState(false);
+  const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const res = await fetch('/api/weatherdata');
-      const weather = await res.json();
-      const grouped: Record<string, { name: string; code: string; temps: number[] }> = {};
-      for (const entry of weather) {
-        const code = entry.province?.code || '?';
-        if (!grouped[code]) grouped[code] = { name: entry.province?.name || code, code, temps: [] };
-        grouped[code].temps.push(entry.temperature);
-      }
-      const chartData = Object.values(grouped).map((g) => ({
-        name: g.name,
-        code: g.code,
-        avgTemp: g.temps.length ? g.temps.reduce((a, b) => a + b, 0) / g.temps.length : 0,
-      }));
-      setData(chartData);
-      setLoading(false);
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    // Set chart height responsively after mount
     const handleResize = () => {
-      setChartHeight(window.innerWidth < 600 ? 220 : 350);
+      // Debounce resize handler
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
+      resizeTimeoutRef.current = setTimeout(() => {
+        setChartHeight(window.innerWidth < 600 ? 220 : 350);
+      }, 150);
     };
     handleResize();
     setMounted(true);
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
+    };
   }, []);
 
   return (
@@ -134,13 +136,11 @@ export default function ClimateChart() {
                   fill={PRIMARY}
                   radius={[4, 4, 0, 0]}
                   isAnimationActive={false}
-                  onMouseOver={(arg: unknown, idx: number) => setHovered(data[idx]?.code)}
-                  onMouseOut={() => setHovered(null)}
                 >
                   <LabelList
                     dataKey="avgTemp"
                     position="top"
-                    formatter={(label) => (typeof label === 'number' ? label.toFixed(1) : '')}
+                    formatter={(label: number | string) => (typeof label === 'number' ? label.toFixed(1) : '')}
                     fill={PRIMARY}
                     className="chart-label-list"
                   />

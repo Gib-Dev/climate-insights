@@ -12,9 +12,17 @@ const provinceSchema = z.object({
     .transform((val) => val.toUpperCase()),
 });
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const provinces = await prisma.province.findMany({ orderBy: { name: 'asc' } });
+    const url = new URL(req.url);
+    const take = Math.min(Number(url.searchParams.get('limit')) || 100, 100);
+    const skip = Number(url.searchParams.get('offset')) || 0;
+
+    const provinces = await prisma.province.findMany({
+      orderBy: { name: 'asc' },
+      take,
+      skip,
+    });
     return NextResponse.json(provinces);
   } catch (error) {
     console.error('Failed to fetch provinces:', error);

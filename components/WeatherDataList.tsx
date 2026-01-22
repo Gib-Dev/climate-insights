@@ -40,7 +40,9 @@ export default function WeatherDataList() {
       const res = await fetch('/api/provinces');
       const data = await res.json();
       setProvinces(data);
-    } catch {}
+    } catch (err) {
+      console.error('Failed to fetch provinces:', err);
+    }
   };
 
   const fetchWeather = async () => {
