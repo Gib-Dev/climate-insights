@@ -5,6 +5,20 @@ import CanadaMap from '../components/CanadaMap';
 import { Map, CloudSun, LayoutDashboard, Github, Database, BarChart3 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
+interface WeatherEntry {
+  temperature: number;
+  province?: {
+    code: string;
+    name: string;
+  };
+}
+
+interface ProvinceData {
+  code: string;
+  name: string;
+  avgTemp: number;
+}
+
 // Animated SVG Waves
 const AnimatedWaves = () => (
   <svg
@@ -35,26 +49,30 @@ const techStack = [
 ];
 
 export default function Home() {
-  const [provinceData, setProvinceData] = useState<{ code: string; avgTemp: number }[]>([]);
+  const [provinceData, setProvinceData] = useState<ProvinceData[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch weather data and group by province for avgTemp
+    // Fetch weather data once and share between CanadaMap and ClimateChart
     fetch('/api/weatherdata')
       .then((res) => res.json())
-      .then((weather) => {
-        const grouped: Record<string, { code: string; temps: number[] }> = {};
+      .then((weather: WeatherEntry[]) => {
+        const grouped: Record<string, { code: string; name: string; temps: number[] }> = {};
         for (const entry of weather) {
           const code = entry.province?.code || '?';
-          if (!grouped[code]) grouped[code] = { code, temps: [] };
+          const name = entry.province?.name || code;
+          if (!grouped[code]) grouped[code] = { code, name, temps: [] };
           grouped[code].temps.push(entry.temperature);
         }
         setProvinceData(
           Object.values(grouped).map((g) => ({
             code: g.code,
+            name: g.name,
             avgTemp: g.temps.length ? g.temps.reduce((a, b) => a + b, 0) / g.temps.length : 0,
           })),
         );
-      });
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   return (
@@ -112,7 +130,7 @@ export default function Home() {
 
       {/* Climate Chart Section */}
       <section className="card" style={{ margin: '32px 0' }}>
-        <ClimateChart />
+        <ClimateChart data={provinceData} loading={loading} />
       </section>
 
       {/* Section Previews */}

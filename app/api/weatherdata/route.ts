@@ -14,11 +14,16 @@ export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const provinceId = url.searchParams.get('provinceId');
+    const take = Math.min(Number(url.searchParams.get('limit')) || 100, 100);
+    const skip = Number(url.searchParams.get('offset')) || 0;
+
     const where = provinceId ? { provinceId: Number(provinceId) } : {};
     const weather = await prisma.weatherData.findMany({
       where,
       orderBy: { date: 'desc' },
       include: { province: true },
+      take,
+      skip,
     });
     return NextResponse.json(weather);
   } catch (error) {

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
 
-// Canada provinces GeoJSON
-const CANADA_PROVINCES_GEOJSON =
-  'https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/canada.geojson';
+// Canada provinces GeoJSON (bundled locally for performance)
+const CANADA_PROVINCES_GEOJSON = '/canada.geojson';
 
 // Province codes to names (for tooltip)
 const PROVINCE_CODES: Record<string, string> = {
