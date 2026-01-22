@@ -1,14 +1,15 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import * as Toast from '@radix-ui/react-toast';
+import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import { authenticatedFetch } from '../lib/api-client';
 import { Pencil, Trash2 } from 'lucide-react';
 
-type User = { id: number; email?: string; name?: string };
+type AppUser = { id: number; email?: string; name?: string };
 
 export default function UserList() {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<AppUser[]>([]);
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
@@ -18,7 +19,7 @@ export default function UserList() {
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMsg, setToastMsg] = useState('');
   const [toastType, setToastType] = useState<'success' | 'error'>('success');
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<SupabaseUser | null>(null);
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -106,7 +107,7 @@ export default function UserList() {
     }
   };
 
-  const startEdit = (user: User) => {
+  const startEdit = (user: AppUser) => {
     setEditingId(user.id);
     setEditEmail(user.email || '');
   };
