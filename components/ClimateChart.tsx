@@ -140,7 +140,7 @@ export default function ClimateChart({ data = [], loading = false }: ClimateChar
                   <LabelList
                     dataKey="avgTemp"
                     position="top"
-                    formatter={(label: number | string) => (typeof label === 'number' ? label.toFixed(1) : '')}
+                    formatter={(value: number) => value.toFixed(1)}
                     fill={PRIMARY}
                     className="chart-label-list"
                   />

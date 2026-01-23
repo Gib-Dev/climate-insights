@@ -1,5 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import type { User } from '@supabase/supabase-js';
 import { Pencil, Trash2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { authenticatedFetch } from '../lib/api-client';
@@ -19,7 +20,7 @@ export default function ProvinceList() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editName, setEditName] = useState('');
   const [editCode, setEditCode] = useState('');
-  const [user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   const fetchProvinces = async () => {
     setLoading(true);
@@ -229,38 +230,6 @@ export default function ProvinceList() {
           ))}
         </ul>
       )}
-      <style jsx global>{`
-        .icon-btn {
-          background: var(--primary);
-          color: #fff;
-          border: none;
-          border-radius: 6px;
-          padding: 6px 14px;
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-          font-size: 15px;
-          font-weight: 600;
-          cursor: pointer;
-          transition:
-            background 0.2s,
-            color 0.2s;
-        }
-        .icon-btn:hover {
-          background: var(--hover);
-          color: #fff;
-        }
-        .icon-btn.delete {
-          background: #fff;
-          color: var(--primary);
-          border: 1px solid var(--primary);
-        }
-        .icon-btn.delete:hover {
-          background: #fff;
-          color: var(--hover);
-          border: 1px solid var(--hover);
-        }
-      `}</style>
     </div>
   );
 }
