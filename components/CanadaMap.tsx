@@ -1,5 +1,18 @@
 import React, { useState } from 'react';
-import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  type GeoPermissibleObjects,
+} from 'react-simple-maps';
+
+interface GeoFeature {
+  rsmKey: string;
+  properties: {
+    code_hasc?: string;
+    name?: string;
+  };
+}
 
 // Canada provinces GeoJSON (bundled locally for performance)
 const CANADA_PROVINCES_GEOJSON = '/canada.geojson';
@@ -47,8 +60,8 @@ export default function CanadaMap({
         style={{ width: '100%', height: 'auto', background: 'none' }}
       >
         <Geographies geography={CANADA_PROVINCES_GEOJSON}>
-          {({ geographies }: any) =>
-            geographies.map((geo: any) => {
+          {({ geographies }: { geographies: GeoFeature[] }) =>
+            geographies.map((geo) => {
               // Province code from GeoJSON property (e.g., 'code_hasc' or 'name')
               // We'll use the first two letters of 'code_hasc' (e.g., 'CA.AB' -> 'AB')
               const code = geo.properties.code_hasc?.split('.')[1] || '';
@@ -57,7 +70,7 @@ export default function CanadaMap({
               return (
                 <Geography
                   key={geo.rsmKey}
-                  geography={geo}
+                  geography={geo as unknown as GeoPermissibleObjects}
                   onMouseEnter={() => {
                     setHovered(code);
                     setTooltip(
