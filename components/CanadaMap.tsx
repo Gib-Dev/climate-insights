@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
-import type { GeoJsonProperties, Geometry } from 'geojson';
 
 interface GeoFeature {
   rsmKey: string;
   type: string;
-  geometry: Geometry;
-  properties: GeoJsonProperties & {
+  geometry: object;
+  properties: {
     code_hasc?: string;
     name?: string;
+    [key: string]: unknown;
   };
 }
 
