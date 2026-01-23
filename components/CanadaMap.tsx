@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import {
-  ComposableMap,
-  Geographies,
-  Geography,
-  type GeoPermissibleObjects,
-} from 'react-simple-maps';
+import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
+import type { GeoJsonProperties, Geometry } from 'geojson';
 
 interface GeoFeature {
   rsmKey: string;
-  properties: {
+  type: string;
+  geometry: Geometry;
+  properties: GeoJsonProperties & {
     code_hasc?: string;
     name?: string;
   };
@@ -70,7 +68,7 @@ export default function CanadaMap({
               return (
                 <Geography
                   key={geo.rsmKey}
-                  geography={geo as unknown as GeoPermissibleObjects}
+                  geography={geo}
                   onMouseEnter={() => {
                     setHovered(code);
                     setTooltip(
