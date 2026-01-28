@@ -8,8 +8,13 @@ const userSchema = z.object({
   name: z.string().optional(),
 });
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const auth = await getAuthenticatedClient(req);
+    if (!auth) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const users = await prisma.user.findMany();
     return NextResponse.json(users);
   } catch (error) {
@@ -48,9 +53,6 @@ export async function POST(req: NextRequest) {
     }
   } catch (error) {
     console.error('Create user error:', error);
-    return NextResponse.json(
-      { error: 'Failed to create user', details: error?.toString() },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'Failed to create user' }, { status: 500 });
   }
 }
